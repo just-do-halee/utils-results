@@ -5,7 +5,7 @@
 
 //! First, You should make your own an error set.
 //! # Example
-//! ```rust
+//! ```no_run
 //! err! {
 //!      BrokenHeader => "broken header."
 //!      AnotherHeader => "not matched header."
@@ -17,11 +17,11 @@
 //! }
 //! ```
 //! And just errbang!
-//! ```rust
+//! ```no_run
 //! errbang!(err:BrokenHeader);
 //! ```
 //! # More Examples
-//! ```rust
+//! ```no_run
 //! fn foo() -> Result<bool> { // Our Master Result Type
 //!     let bar = 2;
 //!     match bar {

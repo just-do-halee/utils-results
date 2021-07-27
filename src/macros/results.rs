@@ -4,7 +4,7 @@
 */
 
 /// this will convert any result type to the another result type.
-///```rust
+///```no_run
 /// resultcast!(errbangsend!(err::UnexpectedEof), Result::<()>);
 ///```
 /// result type cast macro
