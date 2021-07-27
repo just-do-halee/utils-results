@@ -2,8 +2,8 @@
 name = "utils-results"
 version = "1.0.0"
 authors = ["just-do-halee <just.do.halee@gmail.com>"]
-homepage = "https://github.com/just-do-halee/utils-results"
-repository = "https://github.com/just-do-halee/utils-results"
+homepage = "https://github.com/just-do-halee/utils-results/"
+repository = "https://github.com/just-do-halee/utils-results/"
 documentation = "https://docs.rs/utils-results/"
 
 description = "The easiest and most intuitive error handling solution."
