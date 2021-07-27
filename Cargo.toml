@@ -1,0 +1,21 @@
+[package]
+name = "utils-results"
+version = "0.1.0"
+authors = ["just-do-halee <just.do.halee@gmail.com>"]
+homepage = "https://github.com/just-do-halee/utils-results"
+repository = "https://github.com/just-do-halee/utils-results"
+documentation = "https://docs.rs/utils-results/"
+
+description = "The easiest and most intuitive error handling solution."
+
+readme = "README.md"
+
+keywords = ["result", "error", "error-handling", "utils", "cli"]
+categories = ["command-line-interface", "command-line-utilities", "api-bindings"]
+
+license = "MIT"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
