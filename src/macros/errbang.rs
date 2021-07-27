@@ -62,6 +62,21 @@ macro_rules! errbangsend {
     };
 }
 
+/// any type of inside Err() can be converted<br>
+/// and Ok() will be unwraped, converted err will be escaped
+/// ```no_run
+/// let num_read = errcast!(file.read(&mut buf), err::ReadErr, "cannot read.");
+/// ```
+#[macro_export]
+macro_rules! errcast {
+    ($result:expr, $kind:ty$(, $i:expr)*) => {
+        match $result {
+            Ok(v) => v,
+            Err(_) => return errbang!($kind$(, $i)*),
+        }
+    };
+}
+
 /// any type of inside Err() can match this
 /// ```no_run
 /// if let Err(e) = some_result() {

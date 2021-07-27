@@ -10,7 +10,7 @@ The easiest and most intuitive error handling solution.
 [crates-url]: https://crates.io/crates/utils-results
 [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [mit-url]: https://github.com/just-do-halee/utils-results/LICENSE
-| [Docs](https://docs.rs/utils-results/1.0.1/utils_results) |
+| [Docs](https://docs.rs/utils-results/1.1.0/utils_results) |
 
 ## Overview
 
