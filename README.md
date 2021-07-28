@@ -1,6 +1,6 @@
 # utils-results
 
-The easiest and most intuitive error handling solution.
+The easiest and most intuitive error handling solution. (no dependencies, about 150 lines pure codes)
 
 
 [![Crates.io][crates-badge]][crates-url]
@@ -10,7 +10,7 @@ The easiest and most intuitive error handling solution.
 [crates-url]: https://crates.io/crates/utils-results
 [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [mit-url]: https://github.com/just-do-halee/utils-results/LICENSE
-| [Docs](https://docs.rs/utils-results/1.1.0/utils_results) |
+| [Docs](https://docs.rs/utils-results/1.1.1/utils_results) |
 
 ## Overview
 
@@ -28,7 +28,7 @@ err! {
 ```
 And just errbang!
 ```rust
-errbang!(err:BrokenHeader)
+errbang!(err::BrokenHeader)
 ```
 # More Examples
 ```rust
@@ -51,6 +51,19 @@ errbang!(err::MyError1);
 errbang!(err::MyError2, "cannot find.");
 errbang!(err::MyError3, "{} is {}", "bar", 2);
 ```
-
+---
 * Please use our Master ***Result***\<T\> and ***ResultSend***\<T\>
-instead std::result::Result or io::Result etc..
+instead std::result::Result or io::Result etc..  
+---
+###### ***utils-results/lib.rs***
+```rust
+/// Master Result
+pub type Result<T> = result::Result<T, Box<dyn error::Error>>;
+/// Master Result for Send + Sync trait
+pub type ResultSend<T> = result::Result<T, Box<dyn error::Error + Send + Sync>>;
+```
+---
+### just put this in your project.
+```rust
+pub use utils_results::*;
+```

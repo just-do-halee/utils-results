@@ -18,7 +18,7 @@
 //! ```
 //! And just errbang!
 //! ```no_run
-//! errbang!(err:BrokenHeader);
+//! errbang!(err::BrokenHeader);
 //! ```
 //! # More Examples
 //! ```no_run
@@ -34,6 +34,19 @@
 //!     let _is_bar_zero = foo()?;
 //!     Ok(())
 //! }
+//! ```
+//! Please use our Master Result<T> and ResultSend<T> instead std::result::Result or io::Result etc..
+//! ```no_run
+//! /// Master Result
+//! pub type Result<T> = result::Result<T, Box<dyn error::Error>>;
+//! /// Master Result for Send + Sync trait
+//! pub type ResultSend<T> = result::Result<T, Box<dyn error::Error + Send + Sync>>;
+//! ```
+
+//! ---
+//! ### just put this in your project.
+//! ```rust
+//! pub use utils_results::*;
 //! ```
 
 /// make some error. Master Result::Err()
@@ -65,6 +78,7 @@ macro_rules! errbangsend {
 /// any type of inside Err() can be converted<br>
 /// and Ok() will be unwraped, converted err will be escaped
 /// ```no_run
+/// // <Unwraped Ok> = errcast!(<Any Result>, <Master Err>, <Optional,..>);
 /// let num_read = errcast!(file.read(&mut buf), err::ReadErr, "cannot read.");
 /// ```
 #[macro_export]
@@ -80,6 +94,7 @@ macro_rules! errcast {
 /// any type of inside Err() can match this
 /// ```no_run
 /// if let Err(e) = some_result() {
+///     // errmatch!(<Unwraped Err>, <Any Type>)
 ///     if errmatch!(e, err::MyError0) {
 ///         // ...   
 ///     }
@@ -96,8 +111,8 @@ macro_rules! errmatch {
     };
 }
 
-/// matched error returns or excutes, other errors return to outside<br>
-/// and Ok(v) will unwrap and to be v
+/// matched error returns or excutes, other errors return to outside(escape)<br>
+/// and Ok() will unwrap
 ///```no_run
 /// fn main() -> Result<()> {
 ///     let num_read = errextract!(read(),

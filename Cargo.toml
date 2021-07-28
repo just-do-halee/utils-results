@@ -1,16 +1,16 @@
 [package]
 name = "utils-results"
-version = "1.1.0"
+version = "1.1.1"
 authors = ["just-do-halee <just.do.halee@gmail.com>"]
 homepage = "https://github.com/just-do-halee/utils-results/"
 repository = "https://github.com/just-do-halee/utils-results/"
-documentation = "https://docs.rs/utils-results/1.1.0/utils_results/"
+documentation = "https://docs.rs/utils-results/1.1.1/utils_results/"
 
-description = "The easiest and most intuitive error handling solution."
+description = "The easiest and most intuitive error handling solution. (no dependencies, about 150 lines pure codes)"
 
 readme = "README.md"
 
-keywords = ["result", "error", "error-handling", "utils", "cli"]
+keywords = ["result", "error", "error-handling", "utils"]
 categories = ["command-line-interface", "command-line-utilities", "api-bindings"]
 
 license = "MIT"

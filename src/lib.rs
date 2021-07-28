@@ -18,7 +18,7 @@
 //! ```
 //! And just errbang!
 //! ```no_run
-//! errbang!(err:BrokenHeader);
+//! errbang!(err::BrokenHeader);
 //! ```
 //! # More Examples
 //! ```no_run
@@ -37,7 +37,18 @@
 //! ```
 
 //! Please use our Master Result<T> and ResultSend<T> instead std::result::Result or io::Result etc..
+//! ```no_run
+//! /// Master Result
+//! pub type Result<T> = result::Result<T, Box<dyn error::Error>>;
+//! /// Master Result for Send + Sync trait
+//! pub type ResultSend<T> = result::Result<T, Box<dyn error::Error + Send + Sync>>;
+//! ```
 
+//! ---
+//! ### just put this in your project.
+//! ```rust
+//! pub use utils_results::*;
+//! ```
 use std::{error, result};
 
 /// Master Result
