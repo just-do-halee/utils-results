@@ -5,7 +5,7 @@
 
 /// this will convert any result type to the another result type.
 ///```no_run
-/// resultcast!(errbangsend!(err::UnexpectedEof), Result::<()>);
+/// resultcast!(resultcast!(handle.join().unwrap(), Result::<()>));
 ///```
 /// result type cast macro
 #[macro_export]

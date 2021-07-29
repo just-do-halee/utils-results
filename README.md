@@ -10,7 +10,7 @@ The easiest and most intuitive error handling solution. (no dependencies, about 
 [crates-url]: https://crates.io/crates/utils-results
 [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [mit-url]: https://github.com/just-do-halee/utils-results/LICENSE
-| [Docs](https://docs.rs/utils-results/1.1.1/utils_results) |
+| [Docs](https://docs.rs/utils-results/1.1.2/utils_results) |
 
 ## Overview
 
@@ -44,6 +44,7 @@ fn foo() -> Result<bool> { // Our Master Result Type
 
 fn main() -> Result<()> {
     let _is_bar_zero = foo()?;
+    Ok(())
 }
 ```
 ```rust

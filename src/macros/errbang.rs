@@ -132,7 +132,7 @@ macro_rules! errextract {
     };
 }
 
-/// create custom errors list
+/// create custom error list
 /// ```no_run
 /// err! {
 ///      BrokenHeader => "broken header."
@@ -208,7 +208,7 @@ macro_rules! fn_handle_io_error {
             match io_error {
                 Err(e) => match e.kind() {
                     $(
-                        std::io::ErrorKind::UnexpectedEof => errbang!(err::UnexpectedEof),
+                        std::io::ErrorKind::$kind => errbang!($errkind),
                     )*
                     _ => Err(Box::new(e)),
                 },
