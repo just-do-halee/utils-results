@@ -35,6 +35,28 @@
 //!     Ok(())
 //! }
 //! ```
+//! ---
+
+//! #### ***Idiomatic way to handle*** `io::Error`  
+//! ```no_run
+
+//!  io_err! {
+//!      // io::ErrorKind => err::MyError
+//!      UnexpectedEof => err::MyError1
+//!      Interrupted => err::MyError2
+//!      NotFound => err::MyError3
+//!      // ...
+//!  }
+
+//! ```
+//! Declare matching macro and just handle that!<br>
+//! ```no_run
+
+//! io_to_err!(file.seek(SeekFrom::End(0)))?;
+
+//! err_to_io!(my_seek(0))?;
+
+//! ```
 
 //! Please use our Master Result<T> and ResultSend<T> instead std::result::Result or io::Result etc..
 //! ```no_run

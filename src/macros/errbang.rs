@@ -187,33 +187,70 @@ macro_rules! err {
     };
 }
 
-/// casting std::io Error to Master Error (custom list)
+/// matching io::Error and Master Error to use casting error macros<br>
 ///```no_run
-/// fn_handle_io_error! {
+/// io_to_err!(file.seek(SeekFrom::End(0)))?; // <- io::Error to err
+/// err_to_io!(my_seek(0))?; // <- err to io::Error
+///```
+///```no_run
+/// io_err! {
 ///     // std::io::ErrorKind => err::MyError
 ///     UnexpectedEof => err::MyError1
 ///     Interrupted => err::MyError2
 /// }
 ///```
-/// and using in anywhere
-///```rust
-/// fn_handle_io_error(file.seek(SeekFrom::End(0)))?
-///```
 #[macro_export]
-macro_rules! fn_handle_io_error {
+macro_rules! io_err {
     (
         $($kind:ident => $errkind:ty$(,)?)*
     ) => {
-        pub fn fn_handle_io_error<T>(io_error: std::io::Result<T>) -> Result<T> {
+        pub fn fn_handle_io_to_err<T>(io_error: std::io::Result<T>, meta: String) -> Result<T> {
             match io_error {
                 Err(e) => match e.kind() {
                     $(
-                        std::io::ErrorKind::$kind => errbang!($errkind),
+                        std::io::ErrorKind::$kind => Err(Box::new(<$errkind>::new(meta))),
                     )*
                     _ => Err(Box::new(e)),
                 },
                 Ok(t) => Ok(t),
             }
         }
+        pub fn fn_handle_err_to_io<T>(m_error: Result<T>) -> std::io::Result<T> {
+            match m_error {
+                Err(e) => match e {
+                    $(
+                        e if errmatch!(e, $errkind) => std::io::Result::Err(std::io::Error::new(std::io::ErrorKind::$kind, format!("{:?}", e))),
+                    )*
+                    _ => std::io::Result::Err(std::io::Error::new(std::io::ErrorKind::Other, format!("{:?}", e))),
+                },
+                Ok(t) => std::io::Result::Ok(t),
+            }
+        }
+    };
+}
+
+/// casting std::io Error to Master Error matched by `io_err`
+///```no_run
+/// io_to_err!(file.seek(SeekFrom::End(0)))?
+///```
+#[macro_export]
+macro_rules! io_to_err {
+    (
+        $ioe:expr
+    ) => {
+        fn_handle_io_to_err($ioe, format!("[{}:{}] io to err", file!(), line!()))
+    };
+}
+
+/// casting Master Error to std::io Error matched by `io_err`
+///```no_run
+/// err_to_io!(my_seek(0))?
+///```
+#[macro_export]
+macro_rules! err_to_io {
+    (
+        $err:expr
+    ) => {
+        fn_handle_err_to_io($err)
     };
 }

@@ -10,7 +10,7 @@ The easiest and most intuitive error handling solution. (no dependencies, about 
 [crates-url]: https://crates.io/crates/utils-results
 [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [mit-url]: https://github.com/just-do-halee/utils-results/LICENSE
-| [Docs](https://docs.rs/utils-results/1.1.2/utils_results) |
+| [Docs](https://docs.rs/utils-results) |
 
 ## Overview
 
@@ -51,6 +51,28 @@ fn main() -> Result<()> {
 errbang!(err::MyError1);
 errbang!(err::MyError2, "cannot find.");
 errbang!(err::MyError3, "{} is {}", "bar", 2);
+```
+---
+
+#### ***Idiomatic way to handle*** `io::Error`  
+```rust
+
+ io_err! {
+     // io::ErrorKind => err::MyError
+     UnexpectedEof => err::MyError1
+     Interrupted => err::MyError2
+     NotFound => err::MyError3
+     // ...
+ }
+
+```
+Declare matching macro and just handle that!<br>
+```rust
+
+io_to_err!(file.seek(SeekFrom::End(0)))?;
+
+err_to_io!(my_seek(0))?;
+
 ```
 ---
 * Please use our Master ***Result***\<T\> and ***ResultSend***\<T\>
