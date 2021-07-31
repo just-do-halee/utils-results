@@ -33,7 +33,7 @@ macro_rules! resultcastsend {
     ($result:expr) => {
         match $result {
             Ok(o) => ResultSend::Ok(o),
-            Err(e) => ResultSend::Err(Box::new(<err::_>::new(format!(
+            Err(e) => ResultSend::Err(Box::new(<err::__>::new(format!(
                 "[{}:{}] {:?}",
                 file!(),
                 line!(),
