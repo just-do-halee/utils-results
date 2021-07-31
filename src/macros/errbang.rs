@@ -3,7 +3,7 @@
     Copyright 2021 Hwakyeom Kim(=just-do-halee)
 */
 
-#[doc = include_str!("../../README.md")]
+// #[doc = include_str!("../../README.md")]
 
 /// make some error. Master Result::Err()
 /// ```no_run
