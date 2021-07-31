@@ -91,3 +91,14 @@ pub type ResultSend<T> = result::Result<T, Box<dyn error::Error + Send + Sync>>;
 ```rust
 pub use utils_results::*;
 ```
+---
+
+## You can convert any type of Result.  
+
+```rust
+// to our Master Result
+resultcast!(handle.join().unwrap())?;
+
+// also can convert master Result to ResultSend
+resultcastsend!(some_master_result())?;
+```

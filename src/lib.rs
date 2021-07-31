@@ -68,9 +68,20 @@
 
 //! ---
 //! ### just put this in your project.
-//! ```rust
+//! ```no_run
 //! pub use utils_results::*;
 //! ```
+
+//! ## You can convert any type of Result.  
+
+//! ```no_run
+//! // to our Master Result
+//! resultcast!(handle.join().unwrap())?;
+
+//! // also can convert master Result to ResultSend
+//! resultcastsend!(some_master_result())?;
+//! ```
+
 use std::{error, result};
 
 /// Master Result
