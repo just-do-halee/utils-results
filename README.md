@@ -5,11 +5,12 @@ The easiest and most intuitive error handling solution. (no dependencies, about 
 
 [![Crates.io][crates-badge]][crates-url]
 [![MIT licensed][mit-badge]][mit-url]
+![example workflow](https://github.com/just-do-halee/utils-results/actions/workflows/ci.yml/badge.svg)
 
 [crates-badge]: https://img.shields.io/crates/v/utils-results.svg
 [crates-url]: https://crates.io/crates/utils-results
 [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[mit-url]: https://github.com/just-do-halee/utils-results/LICENSE
+[mit-url]: https://github.com/just-do-halee/utils-results/blob/main/LICENSE
 | [Docs](https://docs.rs/utils-results) |
 
 ## Overview
