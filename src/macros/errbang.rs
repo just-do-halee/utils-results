@@ -39,10 +39,10 @@ macro_rules! errbangsend {
 /// ```
 #[macro_export]
 macro_rules! errcast {
-    ($result:expr, $kind:ty$(, $i:expr)*) => {
+    ($result:expr, $kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
         match $result {
             Ok(v) => v,
-            Err(_) => return errbang!($kind$(, $i)*),
+            Err(e) => return errbang!($kind, concat!("casted error [ {} ==> {:?} ] *"$(, $format_str)?), stringify!($result), e $($(, $val )*)? ),
         }
     };
 }
@@ -107,7 +107,6 @@ macro_rules! err {
     (
         @create errstruct $kind:ident $message:tt
     ) => {
-
         #[derive(Debug)]
         pub struct $kind {
             meta: String,
@@ -142,6 +141,7 @@ macro_rules! err {
         pub mod err {
             use super::*;
 
+            #[doc(hidden)]
             err!(@create errstruct __ "external error");
 
 

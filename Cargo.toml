@@ -1,6 +1,6 @@
 [package]
 name = "utils-results"
-version = "2.2.2"
+version = "3.0.0"
 authors = ["just-do-halee <just.do.halee@gmail.com>"]
 homepage = "https://github.com/just-do-halee/utils-results"
 repository = "https://github.com/just-do-halee/utils-results"
@@ -11,7 +11,7 @@ description = "The easiest and most intuitive error handling solution. (no depen
 readme = "README.md"
 
 keywords = ["result", "error", "error-handling", "utils"]
-categories = ["rust-patterns", "command-line-utilities", "api-bindings"]
+categories = ["rust-patterns"]
 
 license = "MIT"
 edition = "2018"
