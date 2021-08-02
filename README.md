@@ -2,13 +2,24 @@
 
 The easiest and most intuitive error handling solution. (no dependencies, about 150 lines pure codes)  
 
+[![Github Forks][github-forks]][github-url]
+[![Github Stars][github-stars]][github-url]
 [![Crates.io][crates-badge]][crates-url]
 [![MIT licensed][mit-badge]][mit-url]
-![example workflow](https://github.com/just-do-halee/utils-results/actions/workflows/ci.yml/badge.svg)
+[![CI][ci-badge]][ci-url]
+[![Twitter][twitter-badge]][twitter-url]
 
-[crates-badge]: https://img.shields.io/crates/v/utils-results.svg
+[github-forks]: https://img.shields.io/github/forks/just-do-halee/utils-results?style=flat&logo=starship&color=dec968&labelColor=383636
+[github-stars]: https://img.shields.io/github/stars/just-do-halee/utils-results?style=flat&logo=starship&color=dec968&labelColor=383636
+[crates-badge]: https://img.shields.io/crates/v/utils-results.svg?labelColor=383636
+[ci-badge]: https://github.com/just-do-halee/utils-results/actions/workflows/ci.yml/badge.svg
+[twitter-badge]: https://img.shields.io/twitter/follow/do_halee?style=flat&logo=twitter&color=4a4646&labelColor=333131&label=just-do-halee
+
+[twitter-url]: https://twitter.com/do_halee
+[github-url]: https://github.com/just-do-halee/utils-results
 [crates-url]: https://crates.io/crates/utils-results
-[mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
+[ci-url]: https://github.com/just-do-halee/utils-results/actions
+[mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg?labelColor=383636
 [mit-url]: https://github.com/just-do-halee/utils-results/blob/main/LICENSE
 | [Docs](https://docs.rs/utils-results) |
 
