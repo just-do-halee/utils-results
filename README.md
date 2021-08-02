@@ -144,7 +144,6 @@ instead std::result::Result or io::Result etc..
 ```rust
 /// Master Result
 pub type Result<T> = result::Result<T, Box<dyn error::Error>>;
-
 /// Master Result for Send + Sync trait
 pub type ResultSend<T> = result::Result<T, Box<dyn error::Error + Send + Sync>>;
 ```
