@@ -14,7 +14,7 @@ The easiest and most intuitive error handling solution. (no dependencies, about 
 
 ```toml
 [dependencies]
-utils_results = "3.0.0"
+utils_results = "3.1.0"
 ```
 
 ## Overview
