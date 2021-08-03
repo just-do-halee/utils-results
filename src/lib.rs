@@ -41,6 +41,72 @@
 //! errbang!(err::MyError3, "{} is {}", "bar", 2);
 //! ```
 //!
+//! | Result
+//! ```text
+//! [src/main.rs 40:1] unexpected eof. bar is 2 <err::UnexpectedEof>
+//! ```
+//!
+//! # ***Important***
+//!
+//! utils-results can handle lots of errors in a beautiful one way.<br>
+//! It's called **Non panic unwraping chaining Errors**.<br>
+//! errbang -> errcast -> errcast -> ... ->  errcast -> errextract<br>
+//!
+//! ## Quick Overview
+//!
+//! ```no_run
+//! use utils_results::*;
+//!
+//! err! {
+//!     One => "this error is first one."
+//!     Two => "this error is second one."
+//!     Three => "this error is third one."
+//!     Well => "is this?"
+//! }
+//!
+//!
+//! fn aaa() -> Result<usize> {
+//!     return errbang!(err::One, "{}.error bang!", 1);
+//! }
+//!
+//! fn bbb() -> Result<usize> {
+//!     let n = errcast!(aaa(), err::Two, "{}.two <- one.", 2);
+//!     Ok(n)
+//! }
+//!
+//! fn ccc() -> ResultSend<usize> { // Result -> ResultSend
+//!     Ok(errcast!(bbb(), err::Three, "{}.three <- two.", n))
+//! }
+//!
+//!
+//! fn main() -> Result<()> {
+//!     let c = errextract!(ccc(), err::Well => 127);
+//!     eprintln!("1/{} is cosmological constant.", c);
+//!     Ok(())
+//! }
+//! ```
+//!
+//! | Result
+//! ```text
+//! Error:
+//! [src/main.rs 11:12] this error is first one. 1.error bang! <err::One> aaa()
+//!                     ⎺↴
+//! [src/main.rs 14:13] this error is second one. 2.two <- one. <err::Two> bbb()
+//!                     ⎺↴
+//! [src/main.rs 18:8] this error is third one. 3.three <- two. <err::Three>
+//! ```
+//! If the matching error be changed,
+//! ```no_run
+//! // Well to Three
+//! let c = errextract!(ccc(), err::Three => 127);
+//! ```
+//! | Result
+//! ```text
+//! 1/127 is cosmological constant.
+//! ```
+//!
+//! ---
+//!
 //! # ***errcast***
 //! Any type of error can be converted into our Master Error. **(non panic unwraping)**
 //!
@@ -51,19 +117,6 @@
 //! let num_read = errcast!(file.read(&mut buf), err::ReadErr, "this is {} data.", "meta");
 //! ```
 //! ---
-//!
-//! Also casted error has more information.  
-//!
-//! ```no_run
-//! // example
-//! let file = errcast!(fs::File::open("test"), err::MyError, "also io error");
-//! ```
-//! ```
-//! Error: MyError { meta: "[src/main.rs:8] casted error [ fs::File::open(\"test\") ==> Os { code: 2, kind: NotFound, message: \"No such file or directory\" } ] *also io error", message: "this is my error." }
-//! ```
-//!
-//! ---
-//!
 //! # Simply just do this!
 //!
 //! ```no_run
@@ -74,7 +127,7 @@
 //! // master `Result` can take any errors
 //! let file = File::open("test")?;
 //! ```
-//! But, *errcast* -> ***errextract*** combo is really good choice.
+//! But, *errcast* -> ***errextract*** combo is always good choice.
 //!
 //! ```no_run
 //! fn exe(path: &str) -> Result<usize> {
@@ -96,8 +149,8 @@
 //! }
 //! ```
 //! ---
-//!
-//! #### ***More idiomatic way to handle*** `io::Error`  
+//! Well, we can also handle io::Error more idiomatic way.
+//! ## ***Matching `io::Error`***
 //! ```no_run
 //!  io_err! {
 //!      // io::ErrorKind => err::MyError
@@ -133,11 +186,9 @@
 //! ```
 
 //! ## You can also convert any type of `Result`
-//! ```rust
-//! // to our Master Result
+//! ```no_run
+//! // to floating Result
 //! resultcast!(handle.join().unwrap())?;
-//! // also can convert master Result to ResultSend
-//! resultcastsend!(some_master_result())?;
 //! ```
 
 use std::{error, result};

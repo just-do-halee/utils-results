@@ -5,7 +5,7 @@
 
 // #[doc = include_str!("../../README.md")]
 
-/// make some error. Master Result::Err()
+/// make some error. floating Err(..)
 /// ```no_run
 /// errbang!(err::MyError1);
 /// errbang!(err::MyError2, "cannot find.");
@@ -13,52 +13,23 @@
 /// ```
 #[macro_export]
 macro_rules! errbang {
-    ($kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
-        Result::Err(Box::new(<$kind>::new(format!(concat!("[{}:{}] ", $($format_str)?), file!(), line!(), $( $($val),* )?))))
+    ($kind:ty$(, $format_str:expr$(, $val:expr )* )?$(;@chain $eb:literal, $($e:expr),+)?) => {
+        Err(<$kind>::new(format!(concat!($($eb ,)?"\n[{} {}:{}] {} ", $($format_str,)? " <{}>") $(, $($e),*)?, file!(), line!(), column!(), <$kind>::message() $( $(, $val)* )?, stringify!($kind))).into())
     };
 }
 
-/// make some error for thread. Master ResultSend::Err()
+/// Any type of error can be converted into our Master Error. **(non panic unwraping)**
 /// ```no_run
-/// errbangsend!(err::MyError1);
-/// errbangsend!(err::MyError2, "cannot find.");
-/// errbangsend!(err::MyError3, "{} is {}", "bar", 2);
-/// ```
-#[macro_export]
-macro_rules! errbangsend {
-    ($kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
-        ResultSend::Err(Box::new(<$kind>::new(format!(concat!("[{}:{}] ", $($format_str)?), file!(), line!(), $( $($val),* )?))))
-    };
-}
-
-/// any type of inside Err() can be converted<br>
-/// and Ok() will be unwraped, converted err will be escaped
-/// ```no_run
+/// // example
 /// // <Unwraped Ok> = errcast!(<Any Result>, <Master Err>, <Optional,..>);
-/// let num_read = errcast!(file.read(&mut buf), err::ReadErr, "cannot read.");
+/// let num_read = errcast!(file.read(&mut buf), err::ReadErr, "this is {} data.", "meta");
 /// ```
 #[macro_export]
 macro_rules! errcast {
     ($result:expr, $kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
         match $result {
             Ok(v) => v,
-            Err(e) => return errbang!($kind, concat!("casted error [ {} ==> {:?} ] *"$(, $format_str)?), stringify!($result), e $($(, $val )*)? ),
-        }
-    };
-}
-
-/// any type of inside Err() can be converted<br>
-/// and Ok() will be unwraped, converted err will be escaped
-/// ```no_run
-/// // <Unwraped Ok> = errcast!(<Any Result>, <Master Err>, <Optional,..>);
-/// let num_read = errcastsend!(file.read(&mut buf), err::ReadErr, "cannot read.");
-/// ```
-#[macro_export]
-macro_rules! errcastsend {
-    ($result:expr, $kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
-        match $result {
-            Ok(v) => v,
-            Err(e) => return errbangsend!($kind, concat!("casted error [ {} ==> {:?} ] *"$(, $format_str)?), stringify!($result), e $($(, $val )*)? ),
+            Err(e) => return errbang!($kind$(, $format_str $(, $val )*)?;@chain "{:?} {}\n                    ⎺↴", e, stringify!($result)),
         }
     };
 }
@@ -83,16 +54,27 @@ macro_rules! errmatch {
     };
 }
 
-/// matched error returns or excutes, other errors return to outside(escape)<br>
-/// and Ok() will unwrap
-///```no_run
+/// non panic unwraping and specific error can return matching block<br>
+/// other errors will go out -> Result<T>
+/// ```no_run
+/// fn exe(path: &str) -> Result<usize> {
+///     let file = errcast!(File::open("test"), err::FileOpenError);
+///     // .....
+///     // ...
+///     Ok(num)
+/// }
+///
 /// fn main() -> Result<()> {
-///     let num_read = errextract!(read(),
-///         err::UnexpectedEof => 0,
-///     );
+///     /// non panic unwraping
+///     /// and specific error can return
+///     /// matching block
+///     let num = errextract!(exe(path),
+///         err::FileOpenError => 0);
+///     /// other errors will go out -> Result<T>
+///
 ///     Ok(())
 /// }
-///```
+/// ```
 #[macro_export]
 macro_rules! errextract {
     ($result:expr, $kind:ty => $match:expr) => {
@@ -123,18 +105,16 @@ macro_rules! err {
     (
         @create errstruct $kind:ident $message:tt
     ) => {
-        #[derive(Debug)]
         pub struct $kind {
-            meta: String,
-            message: &'static str,
+            chain: String
         }
 
         impl $kind {
-            pub fn new(meta: String) -> Self {
-                Self { meta, message: $message }
+            pub fn new(chain: String) -> Self {
+                Self { chain }
             }
-            pub fn as_combination(&self) -> String {
-                format!("{} {}", self.meta, self.message)
+            pub fn message() -> &'static str {
+                $message
             }
         }
 
@@ -145,7 +125,12 @@ macro_rules! err {
         }
         impl std::fmt::Display for $kind {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(f, "{}", self.as_combination())
+                write!(f, "{}", self.chain)
+            }
+        }
+        impl std::fmt::Debug for $kind {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(f, "{}", self.chain)
             }
         }
 
@@ -191,9 +176,9 @@ macro_rules! io_err {
             match io_error {
                 Err(e) => match e.kind() {
                     $(
-                        std::io::ErrorKind::$kind => Err(Box::new(<$errkind>::new(meta))),
+                        std::io::ErrorKind::$kind => errbang!($errkind),
                     )*
-                    _ => Err(Box::new(e)),
+                    _ => Err(e.into()),
                 },
                 Ok(t) => Ok(t),
             }
