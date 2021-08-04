@@ -75,8 +75,8 @@ errbang!(err::MyError3, "{} is {}", "bar", 2);
 
 # ***Important***
 
-### utils-results can handle lots of errors in a beautiful one way.
-### It's called **Non panic unwraping chaining Errors**.
+### utils-results can handle lots of errors in a beautiful way.
+### It's called **Non panic unwraping Chaining Errors**.
 ### errbang -> errcast -> errcast -> ... ->  errcast -> errextract  
   
   

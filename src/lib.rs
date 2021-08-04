@@ -48,8 +48,8 @@
 //!
 //! # ***Important***
 //!
-//! utils-results can handle lots of errors in a beautiful one way.<br>
-//! It's called **Non panic unwraping chaining Errors**.<br>
+//! utils-results can handle lots of errors in a beautiful way.<br>
+//! It's called **Non panic unwraping Chaining Errors**.<br>
 //! errbang -> errcast -> errcast -> ... ->  errcast -> errextract<br>
 //!
 //! ## Quick Overview
