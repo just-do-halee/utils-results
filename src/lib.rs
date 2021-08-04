@@ -187,8 +187,10 @@
 
 //! ## You can also convert any type of `Result`
 //! ```no_run
-//! // to floating Result
+//! // to our Master Result
 //! resultcast!(handle.join().unwrap())?;
+//! // to our Master ResultSend
+//! resultcastsend!(handle.join().unwrap())?;
 //! ```
 
 use std::{error, result};

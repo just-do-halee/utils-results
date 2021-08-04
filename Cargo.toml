@@ -1,6 +1,6 @@
 [package]
 name = "utils-results"
-version = "4.0.0"
+version = "4.1.0"
 authors = ["just-do-halee <just.do.halee@gmail.com>"]
 homepage = "https://github.com/just-do-halee/utils-results"
 repository = "https://github.com/just-do-halee/utils-results"

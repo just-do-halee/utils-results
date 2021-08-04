@@ -24,8 +24,18 @@ macro_rules! errbang {
 /// // <Unwraped Ok> = errcast!(<Any Result>, <Master Err>, <Optional,..>);
 /// let num_read = errcast!(file.read(&mut buf), err::ReadErr, "this is {} data.", "meta");
 /// ```
+/// also can
+/// ```no_run
+/// let num_read = errcast!(file.read(&mut buf));
+/// ```
 #[macro_export]
 macro_rules! errcast {
+    ($result:expr) => {
+        match $result {
+            Ok(v) => v,
+            Err(e) => return errbang!(err::__;@chain "{:?} {}\n                    ⎺↴", e, stringify!($result)),
+        }
+    };
     ($result:expr, $kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
         match $result {
             Ok(v) => v,

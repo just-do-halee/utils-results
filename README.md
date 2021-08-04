@@ -21,11 +21,11 @@ The easiest and most intuitive error handling solution. (no dependencies, about 
 [ci-url]: https://github.com/just-do-halee/utils-results/actions
 [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg?labelColor=383636
 [mit-url]: https://github.com/just-do-halee/utils-results/blob/main/LICENSE
-| [Docs](https://docs.rs/utils-results) |
+| [Docs](https://docs.rs/utils-results) | [Latest Note](https://github.com/just-do-halee/utils-results/blob/main/CHANGELOG.md) |
 
 ```toml
 [dependencies]
-utils_results = "4.0.0"
+utils_results = "4.1.0"
 ```
 
 ## Overview
@@ -221,6 +221,9 @@ pub use utils_results::*;
 ## You can also convert any type of `Result`
 #### | easy way
 ```rust
-// to floating Result
+// to our Master Result
 resultcast!(handle.join().unwrap())?;
+
+// to our Master ResultSend
+resultcastsend!(handle.join().unwrap())?;
 ```
