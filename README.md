@@ -103,7 +103,7 @@ fn bbb() -> Result<usize> {
 }
 
 fn ccc() -> ResultSend<usize> { // Result -> ResultSend
-    Ok(errcast!(bbb(), err::Three, "{}.three <- two.", n))
+    Ok(errcast!(bbb(), err::Three, "{}.three <- two.", 3))
 }
 
 

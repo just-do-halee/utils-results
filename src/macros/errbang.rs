@@ -55,7 +55,7 @@ macro_rules! errmatch {
 }
 
 /// non panic unwraping and specific error can return matching block<br>
-/// other errors will go out -> Result<T>
+/// other errors will go out -> Result\<T\>
 /// ```no_run
 /// fn exe(path: &str) -> Result<usize> {
 ///     let file = errcast!(File::open("test"), err::FileOpenError);
