@@ -1,3 +1,14 @@
+## 4.2.0 (August 5, 2021)
+
+### Refactoring & Performance Improvement
+
+### More Clear and Pretty Design Formatting
+
+### io_to_err!(..) & err_to_io(..)
+* Bug Fixed, precise file|line|column stamp.
+
+---
+
 ## 4.1.0 (August 4, 2021)
 
 ### errcast!(\<Any Result\>)

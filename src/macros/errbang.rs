@@ -13,8 +13,11 @@
 /// ```
 #[macro_export]
 macro_rules! errbang {
-    ($kind:ty$(, $format_str:expr$(, $val:expr )* )?$(;@chain $eb:literal, $($e:expr),+)?) => {
-        Err(<$kind>::new(format!(concat!($($eb ,)?"\n[{} {}:{}] {} ", $($format_str,)? " <{}>") $(, $($e),*)?, file!(), line!(), column!(), <$kind>::message() $( $(, $val)* )?, stringify!($kind))).into())
+    (@create $kind:ty$(, $format_str:expr$(, $val:expr )* )?$(, @stamp: $flcb:expr$(, $flc:expr)+)?$(, @chain: $eb:expr$(, $e:expr)+)?) => {
+        <$kind>::new(format!(concat!($($eb ,)?"\n"$(, $flcb)?, " {} " $(, $format_str)?, " <{}>") $($(, $e)+)?$($(, $flc)+)?, <$kind>::message() $($(, $val)*)?, stringify!($kind)))
+    };
+    ($kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
+        Err(errbang!(@create $kind$(, $format_str$(, $val )* )?, @stamp: "[{} {}:{}]", file!(), line!(), column!()).into())
     };
 }
 
@@ -33,13 +36,13 @@ macro_rules! errcast {
     ($result:expr) => {
         match $result {
             Ok(v) => v,
-            Err(e) => return errbang!(err::__;@chain "{:?} {}\n                    ⎺↴", e, stringify!($result)),
+            Err(e) => return Err(errbang!(@create err::__, @stamp: "[{} {}:{}]", file!(), line!(), column!(), @chain: "{:?} {}\n {:>19}⎺↴", e, stringify!($result), " ").into()),
         }
     };
     ($result:expr, $kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
         match $result {
             Ok(v) => v,
-            Err(e) => return errbang!($kind$(, $format_str $(, $val )*)?;@chain "{:?} {}\n                    ⎺↴", e, stringify!($result)),
+            Err(e) => return Err(errbang!(@create $kind$(, $format_str $(, $val )*)?, @stamp: "[{} {}:{}]", file!(), line!(), column!(), @chain: "{:?} {}\n {:>19}⎺↴", e, stringify!($result), " ").into()),
         }
     };
 }
@@ -182,24 +185,26 @@ macro_rules! io_err {
     (
         $($kind:ident => $errkind:ty$(,)?)*
     ) => {
-        pub fn fn_handle_io_to_err<T>(io_error: std::io::Result<T>, meta: String) -> Result<T> {
+        #[doc(hidden)]
+        pub fn fn_handle_io_to_err<T>(io_error: std::io::Result<T>, file: &str, line :u32, column: u32) -> Result<T> {
             match io_error {
                 Err(e) => match e.kind() {
                     $(
-                        std::io::ErrorKind::$kind => errbang!($errkind),
+                        std::io::ErrorKind::$kind => Err(errbang!(@create $errkind, "* io to err.", @stamp: "[{} {}:{}]", file, line, column).into()),
                     )*
                     _ => Err(e.into()),
                 },
                 Ok(t) => Ok(t),
             }
         }
-        pub fn fn_handle_err_to_io<T>(m_error: Result<T>) -> std::io::Result<T> {
+        #[doc(hidden)]
+        pub fn fn_handle_err_to_io<T>(m_error: Result<T>, file: &str, line :u32, column: u32) -> std::io::Result<T> {
             match m_error {
                 Err(e) => match e {
                     $(
-                        e if errmatch!(e, $errkind) => std::io::Result::Err(std::io::Error::new(std::io::ErrorKind::$kind, format!("{:?}", e))),
+                        e if errmatch!(e, $errkind) => std::io::Result::Err(std::io::Error::new(std::io::ErrorKind::$kind, format!("[{} {}:{}] io::Error {:-<19} {:?}", file, line, column, "<", e))),
                     )*
-                    _ => std::io::Result::Err(std::io::Error::new(std::io::ErrorKind::Other, format!("{:?}", e))),
+                    _ => std::io::Result::Err(std::io::Error::new(std::io::ErrorKind::Other, format!("[{} {}:{}] io::Error {:-<19} {:?}", file, line, column, "<", e))),
                 },
                 Ok(t) => std::io::Result::Ok(t),
             }
@@ -216,7 +221,7 @@ macro_rules! io_to_err {
     (
         $ioe:expr
     ) => {
-        fn_handle_io_to_err($ioe, format!("[{}:{}] io to err", file!(), line!()))
+        fn_handle_io_to_err($ioe, file!(), line!(), column!())
     };
 }
 
@@ -229,6 +234,6 @@ macro_rules! err_to_io {
     (
         $err:expr
     ) => {
-        fn_handle_err_to_io($err)
+        fn_handle_err_to_io($err, file!(), line!(), column!())
     };
 }

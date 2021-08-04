@@ -11,10 +11,7 @@
 #[macro_export]
 macro_rules! resultcast {
     ($result:expr) => {
-        match $result {
-            Ok(o) => Result::Ok(o),
-            Err(e) => errbang!(err::__;@chain "{:?} {}\n                    ⎺↴", e, stringify!($result)),
-        }
+        Result::Ok(errcast!($result))
     };
 }
 
@@ -26,9 +23,6 @@ macro_rules! resultcast {
 #[macro_export]
 macro_rules! resultcastsend {
     ($result:expr) => {
-        match $result {
-            Ok(o) => ResultSend::Ok(o),
-            Err(e) => errbang!(err::__;@chain "{:?} {}\n                    ⎺↴", e, stringify!($result)),
-        }
+        ResultSend::Ok(errcast!($result))
     };
 }
