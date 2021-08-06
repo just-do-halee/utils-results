@@ -1,3 +1,12 @@
+## 4.2.1 (August 7, 2021)
+
+### More Clear Formatting for External Error Chaining
+## Example
+* | io error
+* Error: Custom { kind: NotFound, error: "[src/main.rs 13:5] io::Error <------------------ No such file or directory (os error 2) std::fs::File::open(\"test\")\n                    ⎺↴\n[src/main.rs 9:13] this err  `<err::MyErr>`" }
+
+---
+
 ## 4.2.0 (August 5, 2021)
 
 ### Refactoring & Performance Improvement

@@ -1,6 +1,6 @@
 # utils-results
 
-The easiest and most intuitive error handling solution. (no dependencies, about 150 lines pure codes)  
+The easiest and most intuitive error handling solution. (no dependencies, about 150 lines pure safe codes)  
 
 [![Github Forks][github-forks]][github-url]
 [![Github Stars][github-stars]][github-url]
@@ -25,7 +25,7 @@ The easiest and most intuitive error handling solution. (no dependencies, about 
 
 ```toml
 [dependencies]
-utils_results = "4.2.0"
+utils_results = "4.2.1"
 ```
 
 ## Overview

@@ -36,13 +36,13 @@ macro_rules! errcast {
     ($result:expr) => {
         match $result {
             Ok(v) => v,
-            Err(e) => return Err(errbang!(@create err::__, @stamp: "[{} {}:{}]", file!(), line!(), column!(), @chain: "{:?} {}\n {:>19}⎺↴", e, stringify!($result), " ").into()),
+            Err(e) => return Err(errbang!(@create err::__, @stamp: "[{} {}:{}]", file!(), line!(), column!(), @chain: "{} {}\n {:>19}⎺↴", e, stringify!($result), " ").into()),
         }
     };
     ($result:expr, $kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
         match $result {
             Ok(v) => v,
-            Err(e) => return Err(errbang!(@create $kind$(, $format_str $(, $val )*)?, @stamp: "[{} {}:{}]", file!(), line!(), column!(), @chain: "{:?} {}\n {:>19}⎺↴", e, stringify!($result), " ").into()),
+            Err(e) => return Err(errbang!(@create $kind$(, $format_str $(, $val )*)?, @stamp: "[{} {}:{}]", file!(), line!(), column!(), @chain: "{} {}\n {:>19}⎺↴", e, stringify!($result), " ").into()),
         }
     };
 }
@@ -202,9 +202,9 @@ macro_rules! io_err {
             match m_error {
                 Err(e) => match e {
                     $(
-                        e if errmatch!(e, $errkind) => std::io::Result::Err(std::io::Error::new(std::io::ErrorKind::$kind, format!("[{} {}:{}] io::Error {:-<19} {:?}", file, line, column, "<", e))),
+                        e if errmatch!(e, $errkind) => std::io::Result::Err(std::io::Error::new(std::io::ErrorKind::$kind, format!("[{} {}:{}] io::Error {:-<19} {}", file, line, column, "<", e))),
                     )*
-                    _ => std::io::Result::Err(std::io::Error::new(std::io::ErrorKind::Other, format!("[{} {}:{}] io::Error {:-<19} {:?}", file, line, column, "<", e))),
+                    _ => std::io::Result::Err(std::io::Error::new(std::io::ErrorKind::Other, format!("[{} {}:{}] io::Error {:-<19} {}", file, line, column, "<", e))),
                 },
                 Ok(t) => std::io::Result::Ok(t),
             }

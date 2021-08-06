@@ -1,12 +1,12 @@
 [package]
 name = "utils-results"
-version = "4.2.0"
+version = "4.2.1"
 authors = ["just-do-halee <just.do.halee@gmail.com>"]
 homepage = "https://github.com/just-do-halee/utils-results"
 repository = "https://github.com/just-do-halee/utils-results"
 documentation = "https://docs.rs/utils-results"
 
-description = "The easiest and most intuitive error handling solution. (no dependencies, about 150 lines pure codes)"
+description = "The easiest and most intuitive error handling solution. (no dependencies, about 150 lines pure safe codes)"
 
 readme = "README.md"
 
