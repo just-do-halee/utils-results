@@ -17,7 +17,7 @@ macro_rules! errbang {
         <$kind>::new(format!(concat!($($eb ,)?"\n"$(, $flcb)?, " {} " $(, $format_str)?, " <{}>") $($(, $e)+)?$($(, $flc)+)?, <$kind>::message() $($(, $val)*)?, stringify!($kind)))
     };
     ($kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
-        Err(errbang!(@create $kind$(, $format_str$(, $val )* )?, @stamp: "[{} {}:{}]", file!(), line!(), column!()).into())
+        Err(errbang!(@create $kind$(, $format_str$(, $val )* )?, @stamp: "  [{} {}:{}]", file!(), line!(), column!()).into())
     };
 }
 
@@ -36,13 +36,13 @@ macro_rules! errcast {
     ($result:expr) => {
         match $result {
             Ok(v) => v,
-            Err(e) => return Err(errbang!(@create err::__, @stamp: "[{} {}:{}]", file!(), line!(), column!(), @chain: "{} {}\n {:>19}⎺↴", e, stringify!($result), " ").into()),
+            Err(e) => return Err(errbang!(@create err::__, @stamp: "  [{} {}:{}]", file!(), line!(), column!(), @chain: "{} {}\n {:>20}⎺↴", e, stringify!($result), " ").into()),
         }
     };
     ($result:expr, $kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
         match $result {
             Ok(v) => v,
-            Err(e) => return Err(errbang!(@create $kind$(, $format_str $(, $val )*)?, @stamp: "[{} {}:{}]", file!(), line!(), column!(), @chain: "{} {}\n {:>19}⎺↴", e, stringify!($result), " ").into()),
+            Err(e) => return Err(errbang!(@create $kind$(, $format_str $(, $val )*)?, @stamp: "  [{} {}:{}]", file!(), line!(), column!(), @chain: "{} {}\n {:>20}⎺↴", e, stringify!($result), " ").into()),
         }
     };
 }
@@ -138,12 +138,12 @@ macro_rules! err {
         }
         impl std::fmt::Display for $kind {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(f, "{}", self.chain)
+                write!(f, " {}", self.chain)
             }
         }
         impl std::fmt::Debug for $kind {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(f, "{}", self.chain)
+                write!(f, "{0}{1}{0}", "\n".repeat(2), self.chain)
             }
         }
 
@@ -165,6 +165,46 @@ macro_rules! err {
 
         }
 
+    };
+}
+
+/// panic! with Master Error
+/// ```no_run
+/// errpanic!(err::MyError1);
+/// errpanic!(err::MyError2, "cannot find.");
+/// errpanic!(err::MyError3, "{} is {}", "bar", 2);
+/// ```
+#[macro_export]
+macro_rules! errpanic {
+    ($kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
+        panic!("{0}{1}{0}\n", "\n".repeat(5), errbang!(@create $kind$(, $format_str$(, $val )* )?, @stamp: "  [{} {}:{}]", file!(), line!(), column!()))
+    };
+}
+
+/// Any type of error can be converted into our Master Error. **(and unwraping)**<br>
+/// `And then panic!`
+/// ```no_run
+/// // example
+/// // <Unwraped Ok> = errcast!(<Any Result>, <Master Err>, <Optional,..>);
+/// let num_read = errcast_panic!(file.read(&mut buf), err::ReadErr, "this is {} data.", "meta");
+/// ```
+/// also can
+/// ```no_run
+/// let num_read = errcast_panic!(file.read(&mut buf));
+/// ```
+#[macro_export]
+macro_rules! errcast_panic {
+    ($result:expr) => {
+        match $result {
+            Ok(v) => v,
+            Err(e) => panic!("{0}{1}{0}\n", "\n".repeat(5), errbang!(@create err::__, @stamp: "  [{} {}:{}]", file!(), line!(), column!(), @chain: "{} {}\n {:>20}⎺↴", e, stringify!($result), " ")),
+        }
+    };
+    ($result:expr, $kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
+        match $result {
+            Ok(v) => v,
+            Err(e) => panic!("{0}{1}{0}\n", "\n".repeat(5), errbang!(@create $kind$(, $format_str $(, $val )*)?, @stamp: "  [{} {}:{}]", file!(), line!(), column!(), @chain: "{} {}\n {:>20}⎺↴", e, stringify!($result), " ")),
+        }
     };
 }
 
@@ -190,7 +230,7 @@ macro_rules! io_err {
             match io_error {
                 Err(e) => match e.kind() {
                     $(
-                        std::io::ErrorKind::$kind => Err(errbang!(@create $errkind, "* io to err.", @stamp: "[{} {}:{}]", file, line, column).into()),
+                        std::io::ErrorKind::$kind => Err(errbang!(@create $errkind, "* io to err.", @stamp: "  [{} {}:{}]", file, line, column).into()),
                     )*
                     _ => Err(e.into()),
                 },
@@ -202,9 +242,9 @@ macro_rules! io_err {
             match m_error {
                 Err(e) => match e {
                     $(
-                        e if errmatch!(e, $errkind) => std::io::Result::Err(std::io::Error::new(std::io::ErrorKind::$kind, format!("[{} {}:{}] io::Error {:-<19} {}", file, line, column, "<", e))),
+                        e if errmatch!(e, $errkind) => std::io::Result::Err(std::io::Error::new(std::io::ErrorKind::$kind, format!("  [{} {}:{}] io::Error {:-<20} {}", file, line, column, "<", e))),
                     )*
-                    _ => std::io::Result::Err(std::io::Error::new(std::io::ErrorKind::Other, format!("[{} {}:{}] io::Error {:-<19} {}", file, line, column, "<", e))),
+                    _ => std::io::Result::Err(std::io::Error::new(std::io::ErrorKind::Other, format!("  [{} {}:{}] io::Error {:-<20} {}", file, line, column, "<", e))),
                 },
                 Ok(t) => std::io::Result::Ok(t),
             }

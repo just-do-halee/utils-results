@@ -25,7 +25,7 @@ The easiest and most intuitive error handling solution. (no dependencies, about 
 
 ```toml
 [dependencies]
-utils_results = "4.2.1"
+utils_results = "4.3.0"
 ```
 
 ## Overview
@@ -117,11 +117,15 @@ fn main() -> Result<()> {
 | Result
 ```
 Error:
-[src/main.rs 11:12] this error is first one. 1.error bang! <err::One> aaa()
-                    ⎺↴
-[src/main.rs 14:13] this error is second one. 2.two <- one. <err::Two> bbb()
-                    ⎺↴
-[src/main.rs 18:8] this error is third one. 3.three <- two. <err::Three>
+
+
+  [src/main.rs 11:12] this error is first one. 1.error bang! <err::One> aaa()
+                     ⎺↴
+  [src/main.rs 14:13] this error is second one. 2.two <- one. <err::Two> bbb()
+                     ⎺↴
+  [src/main.rs 18:8] this error is third one. 3.three <- two. <err::Three>
+
+
 ```
 If the matching error be changed,
 ```rust

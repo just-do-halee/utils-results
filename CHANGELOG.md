@@ -1,3 +1,15 @@
+## 4.3.0 (August 9, 2021)
+
+### More Pretty Formatting
+
+### errpanic!(`<err::MyErr>`, ... )
+* New Feature, panic! + Master Error.
+
+### errcast_panic!(***\<Any Result\>***, ... )
+* New Feature, panic! + errcast!.
+
+---
+
 ## 4.2.1 (August 7, 2021)
 
 ### More Clear Formatting for External Error Chaining
