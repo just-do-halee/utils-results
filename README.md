@@ -25,7 +25,7 @@ The easiest and most intuitive error handling solution. (no dependencies, about 
 
 ```toml
 [dependencies]
-utils_results = "4.3.0"
+utils_results = "4.3.1"
 ```
 
 ## Overview
@@ -75,10 +75,17 @@ errbang!(err::MyError3, "{} is {}", "bar", 2);
 
 # ***Important***
 
-### utils-results can handle lots of errors in a beautiful way.
-### It's called **Non panic unwraping Chaining Errors**.
+- 0. Only One Result needed.
+- 1. All casted errors have their own chaining errors' information(all the previous errors).
+- 2. No need to change BACKTRACE=.. mode.
+
+if you follow the below rules, you can easliy debug all your project.
+
 ### errbang -> errcast -> errcast -> ... ->  errcast -> errextract  
+
+### It's called **Non Panic Unwraping Chaining Errors(NPUCE)**.
   
+---
   
 ## * Quick Overview
 
@@ -127,7 +134,7 @@ Error:
 
 
 ```
-If the matching error be changed,
+If the matching error has changed,
 ```rust
 // Well to Three
 let c = errextract!(ccc(), err::Three => 127);

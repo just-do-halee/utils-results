@@ -48,10 +48,18 @@
 //!
 //! # ***Important***
 //!
-//! utils-results can handle lots of errors in a beautiful way.<br>
-//! It's called **Non panic unwraping Chaining Errors**.<br>
-//! errbang -> errcast -> errcast -> ... ->  errcast -> errextract<br>
+//! - 0. Only One Result needed.
+//! - 1. All casted errors have their own chaining errors' information(all the previous errors).
+//! - 2. No need to change BACKTRACE=.. mode.
 //!
+//! if you follow the below rules, you can easliy debug all your project.
+//!
+//! ### errbang -> errcast -> errcast -> ... ->  errcast -> errextract  
+//!
+//! ### It's called **Non Panic Unwraping Chaining Errors(NPUCE)**.
+//!   
+//! ---
+//!   
 //! ## Quick Overview
 //!
 //! ```no_run
