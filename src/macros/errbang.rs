@@ -7,6 +7,7 @@
 
 /// make some error. floating Err(..)
 /// ```no_run
+/// errbang!("error.");
 /// errbang!(err::MyError1);
 /// errbang!(err::MyError2, "cannot find.");
 /// errbang!(err::MyError3, "{} is {}", "bar", 2);
@@ -14,9 +15,12 @@
 #[macro_export]
 macro_rules! errbang {
     (@create $kind:ty$(, $format_str:expr$(, $val:expr )* )?$(, @stamp: $flcb:expr$(, $flc:expr)+)?$(, @chain: $eb:expr$(, $e:expr)+)?) => {
-        <$kind>::new(format!(concat!($($eb ,)?"\n"$(, $flcb)?, " {} " $(, $format_str)?, " <{}>") $($(, $e)+)?$($(, $flc)+)?, <$kind>::message() $($(, $val)*)?, stringify!($kind)))
+        $crate::private::Error::msg(<$kind>::new(format!(concat!($($eb ,)?"\n"$(, $flcb)?, " {} " $(, $format_str)?, " <{}>") $($(, $e)+)?$($(, $flc)+)?, <$kind>::message() $($(, $val)*)?, stringify!($kind))))
     };
-    ($kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
+    ($format_str:literal$(, $val:expr )*) => {
+        Err(errbang!(@create err::__, $format_str$(, $val )*, @stamp: "  [{} {}:{}]", file!(), line!(), column!()).into())
+    };
+    ($kind:ty$(, $format_str:literal$(, $val:expr )* )?) => {
         Err(errbang!(@create $kind$(, $format_str$(, $val )* )?, @stamp: "  [{} {}:{}]", file!(), line!(), column!()).into())
     };
 }
@@ -30,6 +34,7 @@ macro_rules! errbang {
 /// also can
 /// ```no_run
 /// let num_read = errcast!(file.read(&mut buf));
+/// let num_read = errcast!(file.read(&mut buf), "some error.");
 /// ```
 #[macro_export]
 macro_rules! errcast {
@@ -37,6 +42,12 @@ macro_rules! errcast {
         match $result {
             Ok(v) => v,
             Err(e) => return Err(errbang!(@create err::__, @stamp: "  [{} {}:{}]", file!(), line!(), column!(), @chain: "{} {}\n {:>20}⎺↴", e, stringify!($result), " ").into()),
+        }
+    };
+    ($result:expr, $format_str:literal$(, $val:expr )*) => {
+        match $result {
+            Ok(v) => v,
+            Err(e) => return Err(errbang!(@create err::__, $format_str $(, $val )*, @stamp: "  [{} {}:{}]", file!(), line!(), column!(), @chain: "{} {}\n {:>20}⎺↴", e, stringify!($result), " ").into()),
         }
     };
     ($result:expr, $kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
@@ -131,18 +142,13 @@ macro_rules! err {
             }
         }
 
-        impl std::error::Error for $kind {
-            fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-                Some(self)
-            }
-        }
-        impl std::fmt::Display for $kind {
-            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        impl core::fmt::Display for $kind {
+            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
                 write!(f, " {}", self.chain)
             }
         }
-        impl std::fmt::Debug for $kind {
-            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        impl core::fmt::Debug for $kind {
+            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
                 write!(f, "{0}{1}{0}", "\n".repeat(2), self.chain)
             }
         }
@@ -215,18 +221,19 @@ macro_rules! errcast_panic {
 ///```
 ///```no_run
 /// io_err! {
-///     // std::io::ErrorKind => err::MyError
+///     // core::io::ErrorKind => err::MyError
 ///     UnexpectedEof => err::MyError1
 ///     Interrupted => err::MyError2
 /// }
 ///```
+#[cfg(feature = "std")]
 #[macro_export]
 macro_rules! io_err {
     (
         $($kind:ident => $errkind:ty$(,)?)*
     ) => {
         #[doc(hidden)]
-        pub fn fn_handle_io_to_err<T>(io_error: std::io::Result<T>, file: &str, line :u32, column: u32) -> Result<T> {
+        pub fn fn_handle_io_to_err<T>(io_error: std::io::Result<T>, file: &str, line :u32, column: u32) -> $crate::private::Result<T> {
             match io_error {
                 Err(e) => match e.kind() {
                     $(
@@ -238,7 +245,7 @@ macro_rules! io_err {
             }
         }
         #[doc(hidden)]
-        pub fn fn_handle_err_to_io<T>(m_error: Result<T>, file: &str, line :u32, column: u32) -> std::io::Result<T> {
+        pub fn fn_handle_err_to_io<T>(m_error: $crate::private::Result<T>, file: &str, line :u32, column: u32) -> std::io::Result<T> {
             match m_error {
                 Err(e) => match e {
                     $(
@@ -252,10 +259,11 @@ macro_rules! io_err {
     };
 }
 
-/// casting std::io Error to Master Error matched by `io_err`
+/// casting core::io Error to Master Error matched by `io_err`
 ///```no_run
 /// io_to_err!(file.seek(SeekFrom::End(0)))?
 ///```
+#[cfg(feature = "std")]
 #[macro_export]
 macro_rules! io_to_err {
     (
@@ -265,10 +273,11 @@ macro_rules! io_to_err {
     };
 }
 
-/// casting Master Error to std::io Error matched by `io_err`
+/// casting Master Error to core::io Error matched by `io_err`
 ///```no_run
 /// err_to_io!(my_seek(0))?
 ///```
+#[cfg(feature = "std")]
 #[macro_export]
 macro_rules! err_to_io {
     (

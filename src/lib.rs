@@ -36,6 +36,7 @@
 //! }
 //! ```
 //! ```no_run
+//! errbang!("error.");
 //! errbang!(err::MyError1);
 //! errbang!(err::MyError2, "cannot find.");
 //! errbang!(err::MyError3, "{} is {}", "bar", 2);
@@ -82,7 +83,7 @@
 //!     Ok(n)
 //! }
 //!
-//! fn ccc() -> ResultSend<usize> { // Result -> ResultSend
+//! fn ccc() -> Result<usize> {
 //!     Ok(errcast!(bbb(), err::Three, "{}.three <- two.", n))
 //! }
 //!
@@ -116,7 +117,7 @@
 //! ---
 //!
 //! # ***errcast***
-//! Any type of error can be converted into our Master Error. **(non panic unwraping)**
+//! Any type of error can be converted into our Master Error.
 //!
 //!
 //! ```no_run
@@ -134,6 +135,9 @@
 //! ```no_run
 //! // master `Result` can take any errors
 //! let file = File::open("test")?;
+//!
+//! if no std,
+//! let file = io_to_err!(File::open("test"))?;
 //! ```
 //! But, *errcast* -> ***errextract*** combo is always good choice.
 //!
@@ -157,34 +161,15 @@
 //! }
 //! ```
 //! ---
-//! Well, we can also handle io::Error more idiomatic way.
-//! ## ***Matching `io::Error`***
-//! ```no_run
-//!  io_err! {
-//!      // io::ErrorKind => err::MyError
-//!      UnexpectedEof => err::MyError1
-//!      Interrupted => err::MyError2
-//!      NotFound => err::MyError3
-//!      // ...
-//!  }
-//! ```
-//! Declare matching macro and just handle that!<br>
-//! ```no_run
-//! io_to_err!(file.seek(SeekFrom::End(0)))?;
-//!
-//! err_to_io!(my_seek(0))?;
-//! ```
 //! # ***Master Result***
-//! * Please use our Master ***Result***\<T\> and ***ResultSend***\<T\>
+//! * Please use our Master ***Result***\<T\>
 //! instead std::result::Result or io::Result etc..  
+//! * this is `anyhow` Result.<br>
 //! ---
 //! ###### ***utils-results/lib.rs*** Definition
 //! ```no_run
 //! /// Master Result
-//! pub type Result<T> = result::Result<T, Box<dyn error::Error>>;
-//!
-//! /// Master Result for Send + Sync trait
-//! pub type ResultSend<T> = result::Result<T, Box<dyn error::Error + Send + Sync>>;
+//! pub type Result<T> = anyhow::Result<T>;
 //! ```
 
 //! ---
@@ -197,16 +182,18 @@
 //! ```no_run
 //! // to our Master Result
 //! resultcast!(handle.join().unwrap())?;
-//! // to our Master ResultSend
-//! resultcastsend!(handle.join().unwrap())?;
 //! ```
 
-use std::{error, result};
+#![no_std]
 
+extern crate anyhow;
 /// Master Result
-pub type Result<T> = result::Result<T, Box<dyn error::Error>>;
-/// Master Result for Send + Sync trait
-pub type ResultSend<T> = result::Result<T, Box<dyn error::Error + Send + Sync>>;
+pub use anyhow::{Error, Result};
 
 #[macro_use]
 mod macros;
+
+#[doc(hidden)]
+pub mod private {
+    pub use anyhow::{Error, Result};
+}

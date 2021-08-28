@@ -15,7 +15,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
             toolchain: nightly
-      - run: cargo check --no-default-features
+      - run: cargo check
 
   stable:
     name: Rust stable
@@ -25,7 +25,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
             toolchain: stable
-      - run: cargo check --no-default-features
+      - run: cargo check
 
   rust51:
     name: Rust 1.51.0
@@ -35,7 +35,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
             toolchain: 1.51.0
-      - run: cargo check --no-default-features
+      - run: cargo check
 
   rust42:
     name: Rust 1.42.0
@@ -45,7 +45,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
             toolchain: 1.42.0
-      - run: cargo check --no-default-features
+      - run: cargo check
 
   rust36:
     name: Rust 1.36.0
@@ -55,4 +55,4 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
             toolchain: 1.36.0
-      - run: cargo check --no-default-features
+      - run: cargo check

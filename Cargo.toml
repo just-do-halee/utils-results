@@ -1,21 +1,26 @@
 [package]
 name = "utils-results"
-version = "4.3.1"
+version = "5.0.0"
 authors = ["just-do-halee <just.do.halee@gmail.com>"]
 homepage = "https://github.com/just-do-halee/utils-results"
 repository = "https://github.com/just-do-halee/utils-results"
 documentation = "https://docs.rs/utils-results"
 
-description = "The easiest and most intuitive error handling solution. (no dependencies, about 150 lines pure safe codes)"
+description = "The easiest and most intuitive error handling solution."
 
 readme = "README.md"
 
 keywords = ["result", "error", "error-handling", "utils"]
-categories = ["rust-patterns"]
+categories = ["rust-patterns", "no-std"]
 
 license = "MIT"
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+default = [ "anyhow" ]
+std = [ "anyhow/default" ]
+
 [dependencies]
+anyhow = { version = "1.0", default-features = false, optional = true }

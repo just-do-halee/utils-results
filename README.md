@@ -1,6 +1,6 @@
 # utils-results
 
-The easiest and most intuitive error handling solution. (no dependencies, about 150 lines pure safe codes)  
+The easiest and most intuitive error handling solution. (default: no std / feature: std)  
 
 [![Github Forks][github-forks]][github-url]
 [![Github Stars][github-stars]][github-url]
@@ -25,7 +25,7 @@ The easiest and most intuitive error handling solution. (no dependencies, about 
 
 ```toml
 [dependencies]
-utils_results = "4.3.1"
+utils_results = "5.0.0"
 ```
 
 ## Overview
@@ -75,15 +75,13 @@ errbang!(err::MyError3, "{} is {}", "bar", 2);
 
 # ***Important***
 
-- 0. Only One Result needed.
-- 1. All casted errors have their own chaining errors' information(all the previous errors).
-- 2. No need to change BACKTRACE=.. mode.
+- 0. Only one Result type(`anyhow`).
+- 1. All casted errors have their own chaining error' information(all the previous errors).
 
 if you follow the below rules, you can easliy debug all your project.
 
 ### errbang -> errcast -> errcast -> ... ->  errcast -> errextract  
 
-### It's called **Non Panic Unwraping Chaining Errors(NPUCE)**.
   
 ---
   
@@ -109,7 +107,7 @@ fn bbb() -> Result<usize> {
     Ok(n)
 }
 
-fn ccc() -> ResultSend<usize> { // Result -> ResultSend
+fn ccc() -> Result<usize> {
     Ok(errcast!(bbb(), err::Three, "{}.three <- two.", 3))
 }
 
@@ -165,6 +163,9 @@ let file = errcast!(File::open("test"), err::FileOpenError)
 ```rust
 // Master `Result` can take any errors(dyn error)
 let file = File::open("test")?;
+
+// if no std,
+let file = io_to_err!(File::open("test"))?;
 ```
 But, *errcast* -> ***errextract*** combo is always good choice.
 
@@ -188,7 +189,7 @@ fn main() -> Result<()> {
 }
 ```
 ---
-Well, we can also handle io::Error more idiomatic way.
+Well, we can also handle io::Error more idiomatic way. (feature = "std")
 
 ## ***Matching `io::Error`***
 ```rust
@@ -212,29 +213,24 @@ err_to_io!(my_seek(0))?;
 ```
 ---
 # ***Master Result***
-* Please use our Master ***Result***\<T\> and ***ResultSend***\<T\>
+* Please use our Master ***Result***\<T\><br>
 instead std::result::Result or io::Result etc..  
+* this is `anyhow` Result.<br>
 ---
 ###### ***utils-results/lib.rs*** Definition
 ```rust
 /// Master Result
-pub type Result<T> = result::Result<T, Box<dyn error::Error>>;
-/// Master Result for Send + Sync trait
-pub type ResultSend<T> = result::Result<T, Box<dyn error::Error + Send + Sync>>;
+pub type Result<T> = anyhow::Result<T>;
 ```
+
 ---
 ### just put this in your project.
 ```rust
 pub use utils_results::*;
 ```
----
 
 ## You can also convert any type of `Result`
-#### | easy way
 ```rust
 // to our Master Result
 resultcast!(handle.join().unwrap())?;
-
-// to our Master ResultSend
-resultcastsend!(handle.join().unwrap())?;
 ```

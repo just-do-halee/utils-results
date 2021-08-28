@@ -11,18 +11,6 @@
 #[macro_export]
 macro_rules! resultcast {
     ($result:expr) => {
-        Result::Ok(errcast!($result))
-    };
-}
-
-/// this will convert any result type to Master ResultSend.
-///```no_run
-/// resultcastsend!(handle.join().unwrap())?;
-///```
-/// result type cast macro
-#[macro_export]
-macro_rules! resultcastsend {
-    ($result:expr) => {
-        ResultSend::Ok(errcast!($result))
+        $crate::private::Result::<_>::Ok(errcast!($result))
     };
 }
