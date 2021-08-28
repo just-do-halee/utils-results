@@ -1,3 +1,10 @@
+## 5.1.1 (August 29, 2021)
+
+### alloc::{`format`, string::`String`} export
+* for no-std
+
+---
+
 ## 5.1.0 (August 29, 2021)
 
 ### errunwrap!(\<Any Result\>)

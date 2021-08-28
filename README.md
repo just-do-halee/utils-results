@@ -25,7 +25,7 @@ The easiest and most intuitive error handling solution.<br>(default: no std / fe
 
 ```toml
 [dependencies]
-utils_results = "5.1.0"
+utils_results = "5.1.1"
 ```
 
 ## Overview

@@ -202,7 +202,13 @@ pub use anyhow::{Error, Result};
 #[macro_use]
 mod macros;
 
+#[cfg(feature = "default")]
+extern crate alloc;
+
 #[doc(hidden)]
 pub mod private {
+    #[cfg(feature = "default")]
+    pub use alloc::{format, string::String};
+
     pub use anyhow::{Error, Result};
 }

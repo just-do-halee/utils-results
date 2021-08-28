@@ -15,7 +15,7 @@
 #[macro_export]
 macro_rules! errbang {
     (@create $kind:ty$(, $format_str:expr$(, $val:expr )* )?$(, @stamp: $flcb:expr$(, $flc:expr)+)?$(, @chain: $eb:expr$(, $e:expr)+)?) => {
-        $crate::private::Error::msg(<$kind>::new(format!(concat!($($eb ,)?"\n"$(, $flcb)?, " {} " $(, $format_str)?, " <{}>") $($(, $e)+)?$($(, $flc)+)?, <$kind>::message() $($(, $val)*)?, stringify!($kind))))
+        $crate::private::Error::msg(<$kind>::new($crate::private::format!(concat!($($eb ,)?"\n"$(, $flcb)?, " {} " $(, $format_str)?, " <{}>") $($(, $e)+)?$($(, $flc)+)?, <$kind>::message() $($(, $val)*)?, stringify!($kind))))
     };
     ($format_str:literal$(, $val:expr )*) => {
         Err(errbang!(@create err::__, $format_str$(, $val )*, @stamp: "  [{} {}:{}]", file!(), line!(), column!()).into())
@@ -130,11 +130,11 @@ macro_rules! err {
         @create errstruct $kind:ident $message:tt
     ) => {
         pub struct $kind {
-            chain: String
+            chain: $crate::private::String
         }
 
         impl $kind {
-            pub fn new(chain: String) -> Self {
+            pub fn new(chain: $crate::private::String) -> Self {
                 Self { chain }
             }
             pub fn message() -> &'static str {
