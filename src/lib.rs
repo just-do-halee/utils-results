@@ -47,17 +47,26 @@
 //! [src/main.rs 40:1] unexpected eof. bar is 2 <err::UnexpectedEof>
 //! ```
 //!
+//! unwrapping error input data. also can easily compare them.
+//! ```no_run
+//! fn foo() -> Result<()> {
+//!     // example
+//!     return errbang!(err::Bar, "this is input.");
+//! }
+//!
+//! assert_eq!(
+//!    errunwrap!(foo(), err::Bar), "this is input."
+//! );
+//! ```
+//!
 //! # ***Important***
 //!
-//! - 0. Only One Result needed.
-//! - 1. All casted errors have their own chaining errors' information(all the previous errors).
-//! - 2. No need to change BACKTRACE=.. mode.
+//! - 0. Only one Result type(`anyhow`).
+//! - 1. All casted errors have their own chaining error' information(all the previous errors).
 //!
 //! if you follow the below rules, you can easliy debug all your project.
 //!
 //! ### errbang -> errcast -> errcast -> ... ->  errcast -> errextract  
-//!
-//! ### It's called **Non Panic Unwraping Chaining Errors(NPUCE)**.
 //!   
 //! ---
 //!   

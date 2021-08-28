@@ -1,6 +1,6 @@
 # utils-results
 
-The easiest and most intuitive error handling solution. (default: no std / feature: std)  
+The easiest and most intuitive error handling solution.<br>(default: no std / feature: std)  
 
 [![Github Forks][github-forks]][github-url]
 [![Github Stars][github-stars]][github-url]
@@ -25,7 +25,7 @@ The easiest and most intuitive error handling solution. (default: no std / featu
 
 ```toml
 [dependencies]
-utils_results = "5.0.0"
+utils_results = "5.1.0"
 ```
 
 ## Overview
@@ -64,6 +64,7 @@ fn main() -> Result<()> {
 }
 ```
 ```rust
+errbang!("error.");
 errbang!(err::MyError1);
 errbang!(err::MyError2, "cannot find.");
 errbang!(err::MyError3, "{} is {}", "bar", 2);
@@ -71,6 +72,18 @@ errbang!(err::MyError3, "{} is {}", "bar", 2);
 | Result
 ```
 [src/main.rs 40:1] unexpected eof. bar is 2 <err::UnexpectedEof>
+```
+
+unwrapping error input data. also can easily compare them.
+```rust
+fn foo() -> Result<()> {
+    // example
+    return errbang!(err::Bar, "this is input.");
+}
+
+assert_eq!(
+   errunwrap!(foo(), err::Bar), "this is input."
+);
 ```
 
 # ***Important***

@@ -140,6 +140,11 @@ macro_rules! err {
             pub fn message() -> &'static str {
                 $message
             }
+            pub fn input_data<'a>(&'a self) -> &'a str {
+                let start = self.chain.find(']').unwrap() + $message.len() + 3;
+                let end = self.chain.rfind('<').unwrap() - 1;
+                self.chain.get(start..end).unwrap()
+            }
         }
 
         impl core::fmt::Display for $kind {
@@ -171,6 +176,36 @@ macro_rules! err {
 
         }
 
+    };
+}
+
+/// unwrapping error input data.
+/// ```no_run
+/// fn foo() -> Result<()> {
+///     return errbang!(err::Bar, "this is input.");
+/// }
+///
+/// assert_eq!(
+///    errunwrap!(foo(), err::Bar), "this is input."
+/// );
+///
+/// ```
+/// this is equal to
+/// ```no_run
+/// $result.unwrap_err()
+///     .downcast_ref::<$kind>()
+///     .unwrap()
+///     .input_data()
+/// ```
+/// returns boolean
+#[macro_export]
+macro_rules! errunwrap {
+    ($result:expr, $kind:ty) => {
+        $result
+            .unwrap_err()
+            .downcast_ref::<$kind>()
+            .unwrap()
+            .input_data()
     };
 }
 
