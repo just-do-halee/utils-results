@@ -147,13 +147,13 @@ macro_rules! err {
             }
         }
 
-        impl core::fmt::Display for $kind {
-            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        impl $crate::private::fmt::Display for $kind {
+            fn fmt(&self, f: &mut $crate::private::fmt::Formatter<'_>) -> $crate::private::fmt::Result {
                 write!(f, " {}", self.chain)
             }
         }
-        impl core::fmt::Debug for $kind {
-            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        impl $crate::private::fmt::Debug for $kind {
+            fn fmt(&self, f: &mut $crate::private::fmt::Formatter<'_>) -> $crate::private::fmt::Result {
                 write!(f, "{0}{1}{0}", "\n".repeat(2), self.chain)
             }
         }
@@ -256,7 +256,7 @@ macro_rules! errcast_panic {
 ///```
 ///```no_run
 /// io_err! {
-///     // core::io::ErrorKind => err::MyError
+///     // std::io::ErrorKind => err::MyError
 ///     UnexpectedEof => err::MyError1
 ///     Interrupted => err::MyError2
 /// }

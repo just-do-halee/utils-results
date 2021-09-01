@@ -1,6 +1,6 @@
 [package]
 name = "utils-results"
-version = "5.1.1"
+version = "5.2.0"
 authors = ["just-do-halee <just.do.halee@gmail.com>"]
 homepage = "https://github.com/just-do-halee/utils-results"
 repository = "https://github.com/just-do-halee/utils-results"
@@ -10,17 +10,16 @@ description = "The easiest and most intuitive error handling solution."
 
 readme = "README.md"
 
-keywords = ["result", "error", "error-handling", "utils"]
+keywords = ["result", "error", "error-handling", "utility"]
 categories = ["rust-patterns", "no-std"]
 
-license = "MIT"
+license = "MIT OR Apache-2.0"
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-default = [ "anyhow" ]
+default = [ "std" ]
 std = [ "anyhow/default" ]
 
 [dependencies]
-anyhow = { version = "1.0", default-features = false, optional = true }
+anyhow = { version = "1.0", default-features = false }

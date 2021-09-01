@@ -1,3 +1,10 @@
+## 5.2.0 (September 1, 2021)
+
+### Apache 2.0 License added
+### Refactoring features in Cargo.toml
+
+---
+
 ## 5.1.1 (August 29, 2021)
 
 ### alloc::{`format`, string::`String`} export

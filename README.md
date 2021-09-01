@@ -1,6 +1,6 @@
 # utils-results
 
-The easiest and most intuitive error handling solution.<br>(default: no std / feature: std)  
+The easiest and most intuitive error handling solution.<br>  
 
 [![Github Forks][github-forks]][github-url]
 [![Github Stars][github-stars]][github-url]
@@ -25,7 +25,16 @@ The easiest and most intuitive error handling solution.<br>(default: no std / fe
 
 ```toml
 [dependencies]
-utils_results = "5.1.1"
+utils_results = "5.2.0"
+```
+
+## No-std
+
+Disable default feature(allocator is needed).
+
+```toml
+[dependencies]
+utils_results = { version = "5.2.0", default-features = false }
 ```
 
 ## Overview
@@ -88,8 +97,8 @@ assert_eq!(
 
 # ***Important***
 
-- 0. Only one Result type(`anyhow`).
-- 1. All casted errors have their own chaining error' information(all the previous errors).
+- 1. One result type(`anyhow`).
+- 2. All casted errors have their own chaining error' information(all the previous errors).
 
 if you follow the below rules, you can easliy debug all your project.
 

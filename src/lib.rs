@@ -61,8 +61,8 @@
 //!
 //! # ***Important***
 //!
-//! - 0. Only one Result type(`anyhow`).
-//! - 1. All casted errors have their own chaining error' information(all the previous errors).
+//! - 1. One result type(`anyhow`).
+//! - 2. All casted errors have their own chaining error' information(all the previous errors).
 //!
 //! if you follow the below rules, you can easliy debug all your project.
 //!
@@ -193,7 +193,7 @@
 //! resultcast!(handle.join().unwrap())?;
 //! ```
 
-#![no_std]
+#![cfg_attr(not(feature = "std"), no_std)]
 
 extern crate anyhow;
 /// Master Result
@@ -202,13 +202,14 @@ pub use anyhow::{Error, Result};
 #[macro_use]
 mod macros;
 
-#[cfg(feature = "default")]
 extern crate alloc;
 
 #[doc(hidden)]
 pub mod private {
-    #[cfg(feature = "default")]
     pub use alloc::{format, string::String};
-
     pub use anyhow::{Error, Result};
+    #[cfg(not(feature = "std"))]
+    pub use core::fmt;
+    #[cfg(feature = "std")]
+    pub use std::fmt;
 }
