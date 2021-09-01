@@ -5,7 +5,7 @@ The easiest and most intuitive error handling solution.<br>
 [![Github Forks][github-forks]][github-url]
 [![Github Stars][github-stars]][github-url]
 [![Crates.io][crates-badge]][crates-url]
-[![MIT licensed][mit-badge]][mit-url]
+[![Licensed][license-badge]][license-url]
 [![CI][ci-badge]][ci-url]
 [![Twitter][twitter-badge]][twitter-url]
 
@@ -14,13 +14,14 @@ The easiest and most intuitive error handling solution.<br>
 [crates-badge]: https://img.shields.io/crates/v/utils-results.svg?labelColor=383636
 [ci-badge]: https://github.com/just-do-halee/utils-results/actions/workflows/ci.yml/badge.svg
 [twitter-badge]: https://img.shields.io/twitter/follow/do_halee?style=flat&logo=twitter&color=4a4646&labelColor=333131&label=just-do-halee
+[license-badge]: https://img.shields.io/crates/l/utils-results?labelColor=383636
 
 [twitter-url]: https://twitter.com/do_halee
 [github-url]: https://github.com/just-do-halee/utils-results
 [crates-url]: https://crates.io/crates/utils-results
 [ci-url]: https://github.com/just-do-halee/utils-results/actions
-[mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg?labelColor=383636
-[mit-url]: https://github.com/just-do-halee/utils-results/blob/main/LICENSE
+[license-url]: https://github.com/just-do-halee/utils-results
+
 | [Docs](https://docs.rs/utils-results) | [Latest Note](https://github.com/just-do-halee/utils-results/blob/main/CHANGELOG.md) |
 
 ```toml
