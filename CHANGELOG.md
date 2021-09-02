@@ -1,3 +1,10 @@
+## 5.2.1 (September 3, 2021)
+
+### A typing error.
+* now no-std valid
+
+---
+
 ## 5.2.0 (September 1, 2021)
 
 ### Apache 2.0 License added
