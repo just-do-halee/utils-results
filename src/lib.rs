@@ -64,7 +64,7 @@
 //! - 1. One result type(`anyhow`).
 //! - 2. All casted errors have their own chaining error' information(all the previous errors).
 //!
-//! if you follow the below rules, you can easliy debug all your project.
+//! if you follow below rules, you can easily debug all your projects.
 //!
 //! ### errbang -> errcast -> errcast -> ... ->  errcast -> errextract  
 //!   
@@ -142,10 +142,10 @@
 //! ```
 //! ## or...
 //! ```no_run
-//! // master `Result` can take any errors
+//! // Master `Result` can take any errors
 //! let file = File::open("test")?;
 //!
-//! if no std,
+//! // if cfg!(no_std),
 //! let file = io_to_err!(File::open("test"))?;
 //! ```
 //! But, *errcast* -> ***errextract*** combo is always good choice.
