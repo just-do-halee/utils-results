@@ -4,7 +4,7 @@
 */
 
 /// this will convert any result type to Master Result.
-///```no_run
+///```ignore
 /// resultcast!(handle.join().unwrap())?;
 ///```
 /// result type cast macro

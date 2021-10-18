@@ -6,7 +6,7 @@
 // #[doc = include_str!("../../README.md")]
 
 /// make some error. floating Err(..)
-/// ```no_run
+/// ```ignore
 /// errbang!("error.");
 /// errbang!(err::MyError1);
 /// errbang!(err::MyError2, "cannot find.");
@@ -26,13 +26,13 @@ macro_rules! errbang {
 }
 
 /// Any type of error can be converted into our Master Error. **(non panic unwraping)**
-/// ```no_run
+/// ```ignore
 /// // example
 /// // <Unwraped Ok> = errcast!(<Any Result>, <Master Err>, <Optional,..>);
 /// let num_read = errcast!(file.read(&mut buf), err::ReadErr, "this is {} data.", "meta");
 /// ```
 /// also can
-/// ```no_run
+/// ```ignore
 /// let num_read = errcast!(file.read(&mut buf));
 /// let num_read = errcast!(file.read(&mut buf), "some error.");
 /// ```
@@ -59,7 +59,7 @@ macro_rules! errcast {
 }
 
 /// any type of inside Err() can match this
-/// ```no_run
+/// ```ignore
 /// if let Err(e) = some_result() {
 ///     // errmatch!(<Unwraped Err>, <Any Type>)
 ///     if errmatch!(e, err::MyError0) {
@@ -80,7 +80,7 @@ macro_rules! errmatch {
 
 /// non panic unwraping and specific error can return matching block<br>
 /// other errors will go out -> Result\<T\>
-/// ```no_run
+/// ```ignore
 /// fn exe(path: &str) -> Result<usize> {
 ///     let file = errcast!(File::open("test"), err::FileOpenError);
 ///     // .....
@@ -111,7 +111,7 @@ macro_rules! errextract {
 }
 
 /// create custom error list
-/// ```no_run
+/// ```ignore
 /// err! {
 ///      BrokenHeader => "broken header."
 ///      AnotherHeader => "not matched header."
@@ -180,7 +180,7 @@ macro_rules! err {
 }
 
 /// unwrapping error input data.
-/// ```no_run
+/// ```ignore
 /// fn foo() -> Result<()> {
 ///     return errbang!(err::Bar, "this is input.");
 /// }
@@ -191,7 +191,7 @@ macro_rules! err {
 ///
 /// ```
 /// this is equal to
-/// ```no_run
+/// ```ignore
 /// $result.unwrap_err()
 ///     .downcast_ref::<$kind>()
 ///     .unwrap()
@@ -210,7 +210,7 @@ macro_rules! errunwrap {
 }
 
 /// panic! with Master Error
-/// ```no_run
+/// ```ignore
 /// errpanic!(err::MyError1);
 /// errpanic!(err::MyError2, "cannot find.");
 /// errpanic!(err::MyError3, "{} is {}", "bar", 2);
@@ -222,15 +222,28 @@ macro_rules! errpanic {
     };
 }
 
+/// println! with Master Error
+/// ```ignore
+/// errprint!(err::MyError1);
+/// errprint!(err::MyError2, "cannot find.");
+/// errprint!(err::MyError3, "{} is {}", "bar", 2);
+/// ```
+#[macro_export]
+macro_rules! errprint {
+    ($kind:ty$(, $format_str:expr$(, $val:expr )* )?) => {
+        println!("{0}{1}{0}\n", "\n".repeat(5), errbang!(@create $kind$(, $format_str$(, $val )* )?, @stamp: "  [{} {}:{}]", file!(), line!(), column!()))
+    };
+}
+
 /// Any type of error can be converted into our Master Error. **(and unwraping)**<br>
 /// `And then panic!`
-/// ```no_run
+/// ```ignore
 /// // example
 /// // <Unwraped Ok> = errcast!(<Any Result>, <Master Err>, <Optional,..>);
 /// let num_read = errcast_panic!(file.read(&mut buf), err::ReadErr, "this is {} data.", "meta");
 /// ```
 /// also can
-/// ```no_run
+/// ```ignore
 /// let num_read = errcast_panic!(file.read(&mut buf));
 /// ```
 #[macro_export]
@@ -250,11 +263,11 @@ macro_rules! errcast_panic {
 }
 
 /// matching io::Error and Master Error to use casting error macros<br>
-///```no_run
+///```ignore
 /// io_to_err!(file.seek(SeekFrom::End(0)))?; // <- io::Error to err
 /// err_to_io!(my_seek(0))?; // <- err to io::Error
 ///```
-///```no_run
+///```ignore
 /// io_err! {
 ///     // std::io::ErrorKind => err::MyError
 ///     UnexpectedEof => err::MyError1
@@ -295,7 +308,7 @@ macro_rules! io_err {
 }
 
 /// casting core::io Error to Master Error matched by `io_err`
-///```no_run
+///```ignore
 /// io_to_err!(file.seek(SeekFrom::End(0)))?
 ///```
 #[cfg(feature = "std")]
@@ -309,7 +322,7 @@ macro_rules! io_to_err {
 }
 
 /// casting Master Error to core::io Error matched by `io_err`
-///```no_run
+///```ignore
 /// err_to_io!(my_seek(0))?
 ///```
 #[cfg(feature = "std")]

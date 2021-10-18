@@ -26,7 +26,7 @@ The easiest and most intuitive error handling solution.<br>
 
 ```toml
 [dependencies]
-utils_results = "5.2.1"
+utils_results = "5.3.0"
 ```
 
 ## No-std
@@ -35,7 +35,7 @@ Disable default feature(allocator is needed).
 
 ```toml
 [dependencies]
-utils_results = { version = "5.2.1", default-features = false }
+utils_results = { version = "5.3.0", default-features = false }
 ```
 
 ## Overview

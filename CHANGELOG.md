@@ -1,3 +1,10 @@
+## 5.3.0 (October 18, 2021)
+
+### errprint!(`<err::MyErr>`, ... )
+* New Feature, println! + Master Error.
+
+---
+
 ## 5.2.1 (September 3, 2021)
 
 ### A typing error.

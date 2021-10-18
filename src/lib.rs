@@ -5,7 +5,7 @@
 
 //! First, You should make your own an error set.
 //! # Example
-//! ```no_run
+//! ```ignore
 //! err! {
 //!      BrokenHeader => "broken header."
 //!      AnotherHeader => "not matched header."
@@ -17,11 +17,11 @@
 //! }
 //! ```
 //! And just errbang!
-//! ```no_run
+//! ```ignore
 //! errbang!(err::BrokenHeader);
 //! ```
 //! # More Examples
-//! ```no_run
+//! ```ignore
 //! fn foo() -> Result<bool> { // Our Master Result Type
 //!     let bar = 2;
 //!     match bar {
@@ -35,7 +35,7 @@
 //!     Ok(())
 //! }
 //! ```
-//! ```no_run
+//! ```ignore
 //! errbang!("error.");
 //! errbang!(err::MyError1);
 //! errbang!(err::MyError2, "cannot find.");
@@ -48,7 +48,7 @@
 //! ```
 //!
 //! unwrapping error input data. also can easily compare them.
-//! ```no_run
+//! ```ignore
 //! fn foo() -> Result<()> {
 //!     // example
 //!     return errbang!(err::Bar, "this is input.");
@@ -72,7 +72,7 @@
 //!   
 //! ## Quick Overview
 //!
-//! ```no_run
+//! ```ignore
 //! use utils_results::*;
 //!
 //! err! {
@@ -114,7 +114,7 @@
 //! [src/main.rs 18:8] this error is third one. 3.three <- two. <err::Three>
 //! ```
 //! If the matching error be changed,
-//! ```no_run
+//! ```ignore
 //! // Well to Three
 //! let c = errextract!(ccc(), err::Three => 127);
 //! ```
@@ -129,7 +129,7 @@
 //! Any type of error can be converted into our Master Error.
 //!
 //!
-//! ```no_run
+//! ```ignore
 //! // example
 //! // <Unwraped Ok> = errcast!(<Any Result>, <Master Err>, <Optional,..>);
 //! let num_read = errcast!(file.read(&mut buf), err::ReadErr, "this is {} data.", "meta");
@@ -137,11 +137,11 @@
 //! ---
 //! # Simply just do this!
 //!
-//! ```no_run
+//! ```ignore
 //! let file = errcast!(File::open("test"), err::FileOpenError)
 //! ```
 //! ## or...
-//! ```no_run
+//! ```ignore
 //! // Master `Result` can take any errors
 //! let file = File::open("test")?;
 //!
@@ -150,7 +150,7 @@
 //! ```
 //! But, *errcast* -> ***errextract*** combo is always good choice.
 //!
-//! ```no_run
+//! ```ignore
 //! fn exe(path: &str) -> Result<usize> {
 //!     let file = errcast!(File::open("test"), err::FileOpenError);
 //!     // .....
@@ -176,19 +176,19 @@
 //! * this is `anyhow` Result.<br>
 //! ---
 //! ###### ***utils-results/lib.rs*** Definition
-//! ```no_run
+//! ```ignore
 //! /// Master Result
 //! pub type Result<T> = anyhow::Result<T>;
 //! ```
 
 //! ---
 //! ### just put this in your project.
-//! ```no_run
+//! ```ignore
 //! pub use utils_results::*;
 //! ```
 
 //! ## You can also convert any type of `Result`
-//! ```no_run
+//! ```ignore
 //! // to our Master Result
 //! resultcast!(handle.join().unwrap())?;
 //! ```
